@@ -1,0 +1,13 @@
+COMO PUBLICAR NO GITHUB PAGES
+
+1. Crie um repositório no GitHub chamado rota-gpx.
+2. Envie os arquivos index.html e Rota.gpx para o repositório.
+3. Vá em Settings > Pages.
+4. Em Branch, escolha main e /root. Salve.
+5. Aguarde 1 minuto.
+6. O link ficará assim:
+   https://SEU-USUARIO.github.io/rota-gpx/
+
+Esse link abre no navegador com a rota completa.
+O botão Abrir no Google Maps usa origem, destino e alguns pontos intermediários.
+O Google Maps pode recalcular pequenas partes do trajeto.

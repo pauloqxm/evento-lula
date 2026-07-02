@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rota</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    html, body, #map { height: 100%; margin: 0; font-family: Arial, sans-serif; }
+    .panel { position: absolute; z-index: 999; top: 12px; left: 12px; right: 12px; max-width: 430px; background: white; border-radius: 14px; padding: 14px; box-shadow: 0 8px 28px rgba(0,0,0,.22); }
+    .panel h1 { font-size: 18px; margin: 0 0 6px; }
+    .panel p { margin: 4px 0 10px; font-size: 14px; color: #444; }
+    .actions { display: flex; flex-wrap: wrap; gap: 8px; }
+    .btn { display: inline-block; padding: 10px 12px; border-radius: 10px; background: #1557d1; color: white; text-decoration: none; font-size: 14px; font-weight: 700; }
+    .btn.secondary { background: #222; }
+    .leaflet-control-attribution { font-size: 10px; }
+    @media (max-width: 600px) { .panel { left: 8px; right: 8px; } .panel h1 { font-size: 16px; } }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+  <div class="panel">
+    <h1>Rota</h1>
+    <p>Distância aproximada: 57.2 km. Pontos do GPX: 2059.</p>
+    <div class="actions">
+      <a class="btn" target="_blank" href="https://www.google.com/maps/dir/?api=1&origin=-5.1983012,-39.2977423&destination=-5.5258725,-39.3657186&waypoints=-5.249033,-39.308528|-5.317527,-39.298591|-5.370730,-39.316471|-5.423758,-39.323626|-5.450616,-39.291875|-5.481125,-39.292991|-5.510379,-39.317596|-5.545974,-39.334601">Abrir no Google Maps</a>
+      <a class="btn secondary" target="_blank" href="https://www.google.com/maps/search/?api=1&query=-5.5258725,-39.3657186">Ver destino</a>
+      <a class="btn secondary" href="Rota.gpx" download>Baixar GPX</a>
+    </div>
+  </div>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-gpx/1.7.0/gpx.min.js"></script>
+  <script>
+    const map = L.map('map');
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; OpenStreetMap'
+    }).addTo(map);
+
+    new L.GPX('Rota.gpx', {
+      async: true,
+      marker_options: {
+        startIconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet-gpx/1.7.0/pin-icon-start.png',
+        endIconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet-gpx/1.7.0/pin-icon-end.png',
+        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet-gpx/1.7.0/pin-shadow.png'
+      },
+      polyline_options: { color: '#6A3D9A', opacity: 0.95, weight: 5 }
+    }).on('loaded', function(e) {
+      map.fitBounds(e.target.getBounds(), { padding: [30, 30] });
+    }).addTo(map);
+
+    if (navigator.geolocation) {
+      navigator.geolocation.watchPosition(pos => {
+        const ll = [pos.coords.latitude, pos.coords.longitude];
+        if (!window.userMarker) window.userMarker = L.circleMarker(ll, { radius: 7, weight: 3 }).addTo(map).bindPopup('Você está aqui');
+        else window.userMarker.setLatLng(ll);
+      });
+    }
+  </script>
+</body>
+</html>
